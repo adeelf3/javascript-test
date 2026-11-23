@@ -1,0 +1,9 @@
+export type Category = 'keyboards' | 'ducks' | 'coffee' | 'stickers';
+export type Product = { id: string; name: string; price: number; category: Category; stock: number; rating: number; imageUrl: string };
+export type ApiError = { error: { code: string; message: string; details?: Record<string,string> } };
+export type User = { id: string; name: string; email: string };
+export type OrderStatus = 'queued' | 'processing' | 'shipped';
+export type Order = { id: string; status: OrderStatus };
+export type CartItem = { product: Product; quantity: number };
+export type RequestState<T> = { status: 'idle' } | { status: 'loading' } | { status: 'success'; data: T } | { status: 'error'; message: string };
+export type ProductFilters = { search: string; category: string; sort: string; page: number; inStock: boolean };

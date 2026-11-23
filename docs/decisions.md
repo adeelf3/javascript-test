@@ -1,0 +1,31 @@
+# Engineering decisions and alternatives
+
+- **D1-1** Keep Vite and existing React Router concept; avoid a framework migration to preserve the Week 1 mental model.
+- **D1-2** In-process mock request adapter rather than Express/MSW: no server setup and deterministic test data. Trade-off: no real HTTP network. Mock orders, stock and idempotency state now persist in localStorage across refreshes.
+- **D1-3** Strict TypeScript discriminated unions rather than permissive `any`: clearer request states and compile-time contracts.
+- **D1-4** Central typed API module rather than `fetch` in components: consistent error handling.
+- **D2-1** Semantic linked product cards and CSS grid rather than a component framework: simpler keyboard navigation.
+- **D2-2** URLSearchParams rather than only component state: refresh, share and Back work.
+- **D2-3** Shared loading/error/empty component rather than separate duplicated markup.
+- **D2-4** Query cancellation via AbortSignal and cleanup of scroll listener; React Query also manages stale response races.
+- **D2-5** Reusable debounce, local-storage and Back-to-Top hooks rather than inline timers.
+- **D2-6** Query keys and cancellation rather than hand-managed request IDs; latest search result wins.
+- **D3-1** Redux Toolkit rather than context-only global state: explicit actions and derived selectors.
+- **D3-2** Cart and mock order/stock/idempotency state persist in localStorage; the checkout retry key persists in sessionStorage until success. A reload/retry test verifies no duplicate order or stock decrement.
+- **D3-3** Session token in sessionStorage rather than localStorage; less persistence but still XSS-readable. Real production auth should use secure HttpOnly cookies.
+- **D3-4** Translate typed API errors to safe UI messages rather than displaying raw server strings.
+- **D3-5** TanStack Query 30-second stale time; invalidate product data after checkout.
+- **D4-1** Native controls, labels, alt text and alert roles rather than custom inaccessible controls.
+- **D4-2** Production Lighthouse measured font and image opportunities. Self-hosted WOFF2 fonts and smaller WebP card images improved home performance 87→97 in one before/after comparison; see `performance.md`.
+- **D4-3** 24-item server-style pagination instead of rendering all 5,000 products at once; virtualization considered but not necessary at this page size.
+- **D4-4** Local mock polling instead of WebSockets: stock changes without reload. The feed simulates every fifth read failing, retries with exponential backoff and cleans up on unmount; it does not test real network disconnects.
+- **D4-5** Vitest behavior tests rather than snapshots: focus on observable contract outcomes.
+- **D4-6** GitHub Actions workflow source defines npm ci, lint, typecheck, tests and build. No remote workflow run or branch protection was verified.
+- **D4-7** React Error Boundary with console logging rather than third-party monitoring SDK; real production needs external telemetry.
+- **D5-1/2** Document architecture and patterns against actual source, not hypothetical services.
+- **D5-3** Queue design documented, not implemented; the in-memory order mock only simulates queued status.
+- **D5-4** Glossary uses concrete store examples.
+- **D5-5/6** Peer reviews require a real partner; do not fabricate reviews or PR comments.
+- **D5-7** AI contributions and verification limitations are documented honestly.
+- **D5-8** Provisional self-assessment needs engineer validation during walkthrough; local checks and Lighthouse have now run.
+- **D5-9** PR and walkthrough require the repository owner and are not performed by a ZIP export.

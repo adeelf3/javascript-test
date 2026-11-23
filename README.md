@@ -1,36 +1,64 @@
-# Bug Bounty Board: Final Boss
+# The Bug Bazaar
 
-You have 30 minutes. Build a small React app that lists bugs, searches them, adds new ones, and opens a details page.
+React + TypeScript developer-gear storefront, upgraded from Week 1 Bug Bounty Board. **Use the original GitHub repository; do not create a new one.**
 
-## Get started
+## Quick start
 
-1. Unzip this project and open the folder in your editor.
-2. Run `npm install` and `npm run dev`.
-3. Run `git init`, then create your own **private** repo and push to it.
-4. Give your evaluator access to the repo.
-5. Commit as you go. Your commit history is part of your submission.
+Requires Node.js 20+ and npm.
 
-`src/mockApi.js` fails about one time in four on purpose. Please don't change it.
+```bash
+npm ci
+npm run dev
+```
 
-## Missions
+Open the local URL Vite prints (usually http://localhost:5173).
 
-| Mission | Requirements | Points |
-| --- | --- | --- |
-| Load the bugs | Call `fetchBugs` on mount; show loading and error states | 5 |
-| Show the board | Use a `BugList` and `BugCard` component with stable keys | 4 |
-| Search | Filter by title using a derived value, without storing filtered results in state | 4 |
-| Report a bug | Add through a controlled form, reject blank titles, and update state immutably | 5 |
-| Open a case | Add a `/bugs/:id` page and a route for unknown URLs | 2 |
-| Submit and walk through | Submit working, readable code; explain where the state lives, how data flows, and one trade-off | 5 |
+## Scripts
 
-Bonus for bragging rights only: add a Retry button to the error state.
+- `npm run dev` — local development
+- `npm run build` — strict TypeScript check and production build
+- `npm run typecheck` — type checking
+- `npm run lint` — ESLint
+- `npm test` — Vitest suite
+- `npm run preview` — preview production build
 
-## Rules
+## Demo account
 
-Use the browser, DevTools, and documentation. Don't use AI tools.
+Email: `demo@bugbazaar.dev`  Password: `demo123`
 
-## Submit
+## Architecture
 
-1. Push your final commit to `main` before time is called.
-2. Paste your repo link into the evaluation form.
-3. Be ready for a 3-minute walkthrough.
+- `src/data/` — 5,000 deterministic products, API mock and typed client
+- `src/App.tsx` — routes and UI (catalog, detail, cart, account, checkout)
+- `src/store.ts` — Redux cart/session
+- `src/hooks.ts` — reusable hooks
+- `src/test/` — automated behavior tests
+- `docs/` — API, decisions, architecture, testing, performance, security, review notes
+
+## Environment variables
+
+No environment variables required: this project uses an in-process mock API, not a real payment processor or backend. The mock server is not production-grade authentication or persistence.
+
+## Mock error testing
+
+- `GET /api/products?forceError=500` — server error
+- `GET /api/products/not-found` — 404
+- `POST /api/login` with missing or incorrect credentials — 400/401
+- `GET /api/me` without token — 401
+- `POST /api/orders` without token — 401
+- `POST /api/orders` with unavailable product `gear-1` — 409
+- `POST /api/orders` without valid items — 400
+- `GET /api/orders/unknown` with token — 404
+- Query parameter `delay=2000` simulates slow responses.
+
+**Note:** The mock API runs in the browser through a typed request adapter, not an HTTP server; `/api/...` routes are logical contract paths, not independently accessible browser endpoints. This is a deliberate demo trade-off and does not fulfill real HTTP integration tests.
+
+## Submission
+
+The Week 1 repository and its original commit are present. The upgrade was pushed to [PR #1](https://github.com/adeelf3/javascript-test/pull/1); [remote CI passed](https://github.com/adeelf3/javascript-test/actions/runs/45216088458), and an [active main ruleset](https://github.com/adeelf3/javascript-test/settings/rules/27917274) requires PRs and the `checks` status. The owner-led ten-minute walkthrough remains to be done. Do not commit `node_modules` or `dist`.
+
+## Verification
+
+The lockfile supports `npm ci`; an isolated clean install, typecheck, lint, build, and three full 39-test runs passed on 23 November 2026. See [verification](docs/verification.md) and [performance evidence](docs/performance.md). Checkout/order/idempotency state persists in browser localStorage for this demo; the checkout retry key is stored in sessionStorage until success.
+
+Partner reviews and the walkthrough remain pending. See the verification report for the exact scope and evidence gaps.

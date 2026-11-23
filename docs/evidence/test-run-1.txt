@@ -1,0 +1,27 @@
+
+> the-bug-bazaar@2.0.0 test
+> vitest run
+
+
+ RUN  v2.1.9 D:/javascript/Bug Bazaar/javascript-test
+
+ ✓ src/test/validation.test.ts (3 tests) 7ms
+ ✓ src/test/hooks.test.tsx (2 tests) 26ms
+ ✓ src/test/persistence.test.ts (1 test) 220ms
+stderr | src/test/acceptance.test.tsx > storefront acceptance flows > uses URL filters to show matching products
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/test/store.test.ts (20 tests) 2986ms
+   ✓ The Bug Bazaar core behaviors > creates one order for repeated idempotency key 369ms
+ ✓ src/test/acceptance.test.tsx (13 tests) 4668ms
+   ✓ storefront acceptance flows > uses URL filters to show matching products 352ms
+   ✓ storefront acceptance flows > keeps the newest search results when an older request finishes last 818ms
+   ✓ storefront acceptance flows > shows and recovers from an intentionally triggered 500 480ms
+   ✓ storefront acceptance flows > recovers from a detail-page 500 1647ms
+   ✓ storefront acceptance flows > places an order and shows its confirmation 427ms
+
+ Test Files  5 passed (5)
+      Tests  39 passed (39)
+   Start at  21:12:52
+   Duration  7.38s (transform 387ms, setup 816ms, collect 1.96s, tests 7.91s, environment 3.71s, prepare 757ms)

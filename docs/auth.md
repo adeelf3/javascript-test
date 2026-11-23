@@ -1,0 +1,3 @@
+# Authentication and security
+
+Demo login: `demo@bugbazaar.dev` / `demo123`. Token and user live in Redux and **sessionStorage**, not a secure cookie. Session storage expires when the browser tab session ends and is still readable by JavaScript, so XSS can steal it. A production system should use secure, HttpOnly, SameSite cookies, CSRF protection, TLS and a backend that validates every request. Protected routes redirect to `/login`, with the original route stored in React Router location state. The centralized API client signs out on a 401 from authenticated requests; a bad-login 401 instead leaves the form open with a field-safe error. Demo credentials and mock token are **not real security**.

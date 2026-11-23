@@ -1,0 +1,13 @@
+import { handleMockRequest } from './mockServer';
+import { actions, store } from '../store';
+import type { ApiError, Order, Product, ProductFilters, User } from '../types';
+export class ApiClientError extends Error { constructor(public status:number,public code:string,public details?:Record<string,string>){super(code);} }
+export function readableError(error:unknown):string {if(error instanceof ApiClientError){if(error.code==='INVALID_LOGIN')return 'Email or password is incorrect.';if(error.status===401)return 'Please sign in again.';if(error.status===404)return 'We could not find that page.';if(error.status===409)return error.details?.productName?`${error.details.productName} is no longer available in that quantity.`:'An item is out of stock.';if(error.status===400)return Object.values(error.details??{}).filter(Boolean).join(' ')||'Please check your information.';return 'Something went wrong. Please try again.';}return 'Unable to connect. Please try again.';}
+export async function request<T>(path:string,options:{method?:string;body?:unknown;token?:string|null;signal?:AbortSignal;headers?:Record<string,string>}={}):Promise<T>{
+ const url=new URL(path,window.location.origin);const headers=new Headers(options.headers);if(options.token)headers.set('Authorization',`Bearer ${options.token}`);if(options.signal?.aborted)throw new DOMException('Aborted','AbortError');
+ const response=await handleMockRequest(url,options.method??'GET',headers,options.body);
+ if(options.signal?.aborted)throw new DOMException('Aborted','AbortError');
+ if(response.status>=400){const payload=response.body as ApiError;if(response.status===401&&payload.error.code!=='INVALID_LOGIN')store.dispatch(actions.signOut());throw new ApiClientError(response.status,payload.error.code,payload.error.details);}
+ return response.body as T;
+}
+export const api={ products:(filters:ProductFilters,signal?:AbortSignal,forceError=false)=>{const q=new URLSearchParams({search:filters.search,category:filters.category,sort:filters.sort,page:String(filters.page),inStock:String(filters.inStock)});if(forceError)q.set('forceError','500');return request<{items:Product[];total:number}>(`/api/products?${q}`,{signal});},product:(id:string,signal?:AbortSignal,forceError=false)=>request<Product>(`/api/products/${id}${forceError?'?forceError=500':''}`,{signal}),login:(email:string,password:string)=>request<{token:string;user:User}>('/api/login',{method:'POST',body:{email,password}}),me:(token:string)=>request<User>('/api/me',{token}),order:(items:{productId:string;quantity:number}[],token:string,key:string)=>request<Order>('/api/orders',{method:'POST',token,body:{items},headers:{'Idempotency-Key':key}}),getOrder:(id:string,token:string)=>request<Order>(`/api/orders/${id}`,{token})};

@@ -36,6 +36,19 @@ describe('storefront acceptance flows', () => {
     expect(screen.getByRole('searchbox', { name: 'Search products' })).toHaveValue('Debug');
   });
 
+  it('falls back to page one for an invalid page parameter', async () => {
+    renderApp('/?page=NaN');
+    expect(await screen.findAllByRole('link', { name: 'Debug Duck 2' })).toHaveLength(2);
+    expect(screen.getByText('Page 1 of 209')).toBeInTheDocument();
+  });
+
+  it('moves an out-of-range page back to the last available page', async () => {
+    renderApp('/?page=999999');
+    expect(await screen.findByText('Page 209 of 209')).toBeInTheDocument();
+    expect(screen.getByText('5,000 products found')).toBeInTheDocument();
+    expect(screen.queryByText('No products match those filters. Try a different search.')).not.toBeInTheDocument();
+  });
+
   it('keeps the newest search results when an older request finishes last', async () => {
     const pending = new Map<string, (result: { items: Product[]; total: number }) => void>();
     vi.spyOn(api, 'products').mockImplementation(filters => new Promise(resolve => {

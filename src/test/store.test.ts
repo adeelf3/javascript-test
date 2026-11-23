@@ -1,7 +1,7 @@
 import { describe,it,expect } from 'vitest';
 import { store,actions,selectCartCount,selectCartTotal } from '../store';
 import { seedProducts } from '../data/products';
-import { handleMockRequest } from '../data/mockServer';
+import { getMockProducts, handleMockRequest } from '../data/mockServer';
 const products=seedProducts();
 const headers=()=>new Headers();
 const call=(path:string,method='GET',body?:unknown,h=headers())=>handleMockRequest(new URL(path,'http://localhost'),method,h,body);
@@ -22,6 +22,7 @@ describe('The Bug Bazaar core behaviors',()=>{
  it('rejects unauthenticated checkout',async()=>expect((await call('/api/orders','POST',{items:[]})).status).toBe(401));
  it('rejects out-of-stock checkout',async()=>{const h=headers();h.set('Authorization','Bearer demo-session-token');h.set('Idempotency-Key','stock-test');expect((await call('/api/orders','POST',{items:[{productId:'gear-1',quantity:1}]},h)).status).toBe(409);});
  it('creates one order for repeated idempotency key',async()=>{const h=headers();h.set('Authorization','Bearer demo-session-token');h.set('Idempotency-Key','duplicate-test');const b={items:[{productId:'gear-2',quantity:1}]};const a=await call('/api/orders','POST',b,h);const c=await call('/api/orders','POST',b,h);expect(a.status).toBe(201);expect((a.body as {id:string}).id).toBe((c.body as {id:string}).id);});
+ it('rejects duplicate lines that exceed combined stock without decrementing it',async()=>{const h=headers();h.set('Authorization','Bearer demo-session-token');h.set('Idempotency-Key','duplicate-lines-test');const before=getMockProducts().find(p=>p.id==='gear-3')!.stock;const body={items:[{productId:'gear-3',quantity:before},{productId:'gear-3',quantity:before}]};const response=await call('/api/orders?delay=0','POST',body,h);expect(response.status).toBe(409);expect(getMockProducts().find(p=>p.id==='gear-3')!.stock).toBe(before);});
  it('returns 404 for missing order',async()=>{const h=headers();h.set('Authorization','Bearer demo-session-token');expect((await call('/api/orders/not-found','GET',undefined,h)).status).toBe(404);});
  it('forces server error for retry testing',async()=>expect((await call('/api/products?forceError=500')).status).toBe(500));
  it('computes cart count and totals from state',()=>{const state=store.getState();expect(selectCartCount(state)).toBeGreaterThanOrEqual(0);expect(selectCartTotal(state)).toBeGreaterThanOrEqual(0);});

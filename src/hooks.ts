@@ -1,0 +1,4 @@
+import { useEffect, useState } from 'react';
+export function useDebounce<T>(value:T,delay=300):T{const [debounced,setDebounced]=useState(value);useEffect(()=>{const id=window.setTimeout(()=>setDebounced(value),delay);return()=>window.clearTimeout(id);},[value,delay]);return debounced;}
+export function useBackToTop(){const [visible,setVisible]=useState(false);useEffect(()=>{const onScroll=()=>setVisible(window.scrollY>400);window.addEventListener('scroll',onScroll,{passive:true});onScroll();return()=>window.removeEventListener('scroll',onScroll);},[]);return visible;}
+export function useLocalStorage<T>(key:string,initial:T):[T,(value:T)=>void]{const [value,setValue]=useState<T>(()=>{try{const raw=localStorage.getItem(key);return raw?JSON.parse(raw) as T:initial;}catch{return initial;}});useEffect(()=>{localStorage.setItem(key,JSON.stringify(value));},[key,value]);return [value,setValue];}

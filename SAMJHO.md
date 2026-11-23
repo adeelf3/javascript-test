@@ -1,107 +1,85 @@
-# Beginner practice version
+# Bug Bounty Board — beginner explanation
 
-Assignment AI tools ko mana karta hai. Yeh AI-assisted practice version hai.
-Isay independent work keh kar submit na karein.
+Yeh AI-assisted learning version hai. Original assessment AI tools ko mana
+karta hai; isay independent work keh kar present na karein.
 
 ## Run
 
-```bash
 npm install
 npm run dev
-```
 
-## Kya complete hai?
+## Kya complete hai
 
-- API se bugs load karna, loading aur error message.
-- Retry button.
-- BugList aur BugCard mein bugs show karna.
-- Title se search, capital/small letters dono ke sath.
-- Empty result message.
+- Mount par fetchBugs, loading, error aur Retry.
+- BugList aur BugCard, key={bug.id}.
+- Title se case-insensitive search, derived filteredBugs.
+- Controlled title aur severity inputs.
+- Blank ya sirf spaces wala title reject.
+- Immutable array update se naya bug add.
+- /bugs/:id details, missing bug message, aur unknown URL ka Not Found page.
 
-Report form incomplete hai: title type hota hai, lekin validation aur naya
-bug add karna pending hai. Button disabled hai. Details page aur routes
-implement nahi kiye. mockApi.js unchanged hai.
+mockApi.js unchanged hai. API jaan boojh kar kabhi fail hoti hai.
 
-## Asaan explanation
+## State aur data flow
 
-### 1. State App mein hai
+App mein bugs, loading, error, search, title, severity aur formError hain.
+State badalne par React screen dobara render karta hai.
 
-State woh data hai jo change ho sakta hai. State update hone par React
-screen dobara render karta hai.
+App -> BugList -> BugCard: props se data neeche jata hai.
+BugList map se cards banata hai. Har card ki key us bug ki stable id hai.
+BugCard ka Link URL ko /bugs/1 jaisi value deta hai.
 
-- bugs: API se aane wali list, shuru mein empty array.
-- loading: request chal rahi hai ya nahi.
-- error: request fail hone ka message.
-- search: search input ka text.
-- title: incomplete report form ka text.
+BugDetails ko App bugs deta hai. useParams URL se id nikalta hai.
+find us id ka bug dhoondta hai. URL id string hoti hai, is liye comparison
+mein bug ki numeric id ko String banate hain.
 
-### 2. Data load kaise hota hai?
+## API
 
-useEffect App mount hone par loadBugs call karta hai. Empty dependency
-array [] ka matlab search type karne par effect dobara nahi chalega.
-Starter mein StrictMode hai, is liye development mein effect do baar
-chal sakta hai.
+useEffect ki [] dependencies ki wajah se mount par loadBugs chalta hai.
+then mein list set hoti hai, catch mein error, finally mein loading false.
+Development StrictMode mein effect do baar chal sakta hai.
+latestRequest useRef mein request number rakhta hai. Sirf latest request
+state update karti hai; purani request ka result ignore hota hai. Cleanup
+request number badal kar unmount ke baad updates bhi ignore karta hai.
+Retry dobara API call karta hai.
 
-loadBugs loading true karta hai aur purana error clear karta hai.
-fetchBugs Promise deta hai:
+## Search
 
-- then: success par data setBugs mein save hota hai.
-- catch: failure par message setError mein save hota hai.
-- finally: success ya failure, loading false ho jati hai.
+value={search} aur onChange mein setSearch controlled input banate hain.
+filter title ko check karta hai. toLowerCase capital/small letter ka farq
+khatam karta hai. includes search text ki mojoodgi check karta hai.
+filteredBugs state nahi: bugs aur search se har render par calculate hota hai.
 
-API jaan boojh kar kabhi fail hoti hai. Retry wahi loadBugs function
-dobara chalata hai.
+## Add bug
 
-### 3. Components aur props
+1. preventDefault form ko page reload karne se rokta hai.
+2. trim extra spaces hata deta hai. Empty title par error aur return.
+3. setBugs ka callback current list leta hai.
+4. map se IDs aur Math.max se sab se bari ID milti hai; +1 nayi ID hai.
+5. [...currentBugs, newBug] naya array banata hai. Purana array mutate nahi hota.
+6. Title, severity aur form error reset hote hain.
 
-App -> BugList -> BugCard
+Loading ya API error ke waqt Add disabled hai, taake pending initial API
+response user ka naya bug overwrite na kare.
+Active search se match na karne wala naya bug search clear karne par dikhega.
 
-App filteredBugs ko BugList ke bugs prop mein deta hai.
-BugList map se har bug ka BugCard banata hai.
-BugCard ko bug prop milta hai aur woh title aur severity dikhata hai.
-key={bug.id} React ko har item ki stable identity deta hai.
+## Routes
 
-### 4. Search
+/ -> board aur form
+/bugs/:id -> selected bug
+* -> unknown URL
 
-Input ka value search state se aata hai. onChange input ka naya text
-setSearch ko deta hai. Isay controlled input kehte hain.
+## Trade-off
 
-filter har bug ko check karta hai. toLowerCase dono texts ko small
-letters mein karta hai. includes check karta hai ke search text title
-mein hai ya nahi. Empty search sab titles se match hoti hai.
-
-filteredBugs alag state nahi hai. Har render par bugs aur search se
-calculate hota hai. Is se filtered list ko manually sync nahi karna parta.
-
-### 5. Report form
-
-Title controlled input hai. handleSubmit ka preventDefault browser ko
-page reload karne se rokta hai, lekin disabled button ki wajah se abhi
-normal submit available nahi. Title validation, unique ID, aur immutable
-array update abhi TODO hain. Inhein complete kehna durust nahi.
+Bugs sirf memory mein hain. Naye bugs backend ya localStorage mein save
+nahi hote; refresh par API ke original bugs aate hain. Is se beginner app
+simple rehti hai. Naye bug ka details URL bhi refresh ke baad missing hoga.
 
 ## Walkthrough practice
 
-Code samajhne ke baad apne lafzon mein explain karein:
+App state own karta hai. Components props se data lete hain. API effect se
+load hoti hai. Search derived value hai. Form blank title validate karta hai
+aur spread se list update karta hai. Router URL id se details show karta hai.
 
-"App mein list aur input ki state hai. Mount par useEffect API call karta
-hai. Loading ke waqt message aata hai. Success par list aur failure par
-error aur Retry dikhte hain. BugList map se BugCard banata hai. Search
-filter se calculate hoti hai; filtered results state mein nahi rakhe.
-Report form mein sirf controlled title input bana hai; adding pending hai."
-
-Trade-off: state sirf memory mein hai, is liye reload par inputs reset hote
-hain aur API dobara call hoti hai. Beginner app simple hai; production mein
-overlapping requests ke liye cleanup ya stale-response protection chahiye.
-
-## Khud check karein
-
-1. Page load par loading, phir teen bugs ya error nazar aaye.
-2. Error aaye to Retry dabayein; random failure dobara bhi aa sakta hai.
-3. CHECKOUT type karein: checkout wala bug mile.
-4. xyz type karein: No bugs found aaye.
-5. Search clear karein: saare bugs wapas aayein.
-6. Report title type karein: text update ho, Add button disabled rahe.
-
-Practice: code dekhe baghair batayein setSearch ke baad screen kyun badalti
-hai, map aur filter mein kya farq hai, aur key mein id kyun di hai.
+Khud explain karein: map aur filter ka farq? preventDefault kyun? Props aur
+state ka farq? Spread se update kyun? useParams kya deta hai?

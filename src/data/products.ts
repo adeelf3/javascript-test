@@ -1,0 +1,14 @@
+import type { Category, Product } from '../types';
+import keyboardImage from '../assets/keyboard.webp';
+import duckImage from '../assets/duck.webp';
+import coffeeImage from '../assets/coffee.webp';
+import stickersImage from '../assets/stickers.webp';
+import keyboardCard from '../assets/keyboard-card.webp';
+import duckCard from '../assets/duck-card.webp';
+import coffeeCard from '../assets/coffee-card.webp';
+import stickersCard from '../assets/stickers-card.webp';
+const categories: Category[] = ['keyboards','ducks','coffee','stickers'];
+const names: Record<Category,string[]> = { keyboards: ['Mechanical Keyboard','Compact Keyboard','Silent Keyboard','RGB Keyboard'], ducks: ['Debug Duck','Captain Duck','Rubber Duck','Senior Duck'], coffee: ['Dark Roast Beans','Cold Brew Kit','Developer Blend','Espresso Beans'], stickers: ['Ship It Pack','Git Commit Stickers','Code Review Set','Pixel Sticker Pack'] };
+const images: Record<Category,string> = { keyboards: keyboardImage, ducks: duckImage, coffee: coffeeImage, stickers: stickersImage };
+export const cardImages: Record<Category,string> = { keyboards: keyboardCard, ducks: duckCard, coffee: coffeeCard, stickers: stickersCard };
+export const seedProducts = (): Product[] => Array.from({length:5000}, (_,i) => { const category=categories[i%4]; return { id: `gear-${i+1}`, name: `${names[category][Math.floor(i/4)%4]} ${i+1}`, price: 799 + ((i*137)%15000), category, stock: i%19===0?0:1+(i%28), rating: Math.round((3.5+(i%16)/10)*10)/10, imageUrl: images[category] }; });

@@ -9,7 +9,7 @@ The nine-page The Bug Bazaar PDF is the acceptance source. The handover Markdown
 - `npm test`: three separate full runs, each **5 files, 39 tests passed**: [run 1](evidence/test-run-1.txt), [run 2](evidence/test-run-2.txt), [run 3](evidence/test-run-3.txt).
 - Manual browser at `http://localhost:5173/login`: invalid login displayed inline and announced errors; demo login reached Account. A shared `/?search=Debug&category=ducks` URL restored both filters and displayed 313 matching products.
 - Production Lighthouse accessibility: home, cart and login each **100**. Home performance improved **87 → 97**; [method and reports](performance.md).
-- Local Git remote points to the original GitHub repository. Before the submission push, local HEAD and remote main were both `deb30b7`; the submission branch and CI status must be checked on GitHub.
+- The upgrade was pushed to the original repository as [PR #1](https://github.com/adeelf3/javascript-test/pull/1), commit `b56d687`. Its [GitHub Actions CI run](https://github.com/adeelf3/javascript-test/actions/runs/45216088458) passed the clean install, lint, typecheck, test and build jobs. The active [main ruleset](https://github.com/adeelf3/javascript-test/settings/rules/27917274) requires a PR and the GitHub Actions `checks` status; it blocks force pushes and deletion.
 
 ## PDF acceptance checklist
 
@@ -46,8 +46,8 @@ Status means local evidence, not an evaluator score. Partial means evidence or a
 - **D4-3 Pass:** 24 cards per page from 5,000 seeded products; virtualization skipped with rationale in [performance](performance.md).
 - **D4-4 Pass for simulated feed:** polling changes stock, retries a simulated interruption every fifth read with backoff, and cleans its timer. Real network transport/reconnect was not tested.
 - **D4-5 Pass:** 39 behavioral tests cover cart, hooks, auth, filters, checkout and 409, passed three times.
-- **D4-6 Partial:** local workflow defines npm ci/lint/typecheck/test/build; no observed remote CI, branch protection or merge blocking.
-- **D4-7 Partial:** Error Boundary fallback and console logging; three monitoring events documented. No remote telemetry.
+- **D4-6 Pass:** the workflow runs npm ci/lint/typecheck/test/build; PR #1 CI passed remotely, and the active main ruleset requires its `checks` status before merge.
+- **D4-7 Pass for documented scope:** Error Boundary fallback and console logging; three monitoring events documented. No remote telemetry was required by the PDF.
 
 ### Day 5
 
@@ -59,8 +59,8 @@ Status means local evidence, not an evaluator score. Partial means evidence or a
 - **D5-6 Pending:** no partner PR or review comments. [Template](peer-review-template.md) is not a review.
 - **D5-7 Pass as written record:** [AI use log](ai-notes.md).
 - **D5-8 Partial:** [reflection](reflection.md) has provisional ratings; owner must validate in walkthrough.
-- **D5-9 Pending at verification:** no per-task commit series or observed ten-minute walkthrough. Existing first-commit history is preserved; PR and remote CI status must be checked on GitHub.
+- **D5-9 Partial:** the original first commit is preserved, the upgrade was pushed through PR #1 and remote CI passed. A historical per-task commit series was not made, and an owner-led ten-minute walkthrough has not been observed.
 
 ## Outstanding external work
 
-Assign a partner for D5-5/D5-6; review real partner artifacts and reply on the project's PR. Verify remote CI, configure required checks and perform the walkthrough. The full PDF cannot yet be marked complete.
+Assign a partner for D5-5/D5-6; review real partner artifacts and reply on the project's PR. The owner must perform the ten-minute walkthrough and validate the provisional reflection. D4-2 still lacks separate before/after timings for each performance fix; D5-9 lacks per-task historical commits. The full PDF cannot yet be marked complete.

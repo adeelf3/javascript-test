@@ -55,10 +55,10 @@ No environment variables required: this project uses an in-process mock API, not
 
 ## Submission
 
-The Week 1 repository and its original commit are present. The remaining submission work is to commit the current changes with task IDs, push to the existing remote, open a PR, show remote CI passing and give a 10-minute walkthrough. Do not commit `node_modules` or `dist`.
+The Week 1 repository and its original commit are present. The upgrade was pushed to [PR #1](https://github.com/adeelf3/javascript-test/pull/1); [remote CI passed](https://github.com/adeelf3/javascript-test/actions/runs/45216088458), and an [active main ruleset](https://github.com/adeelf3/javascript-test/settings/rules/27917274) requires PRs and the `checks` status. The owner-led ten-minute walkthrough remains to be done. Do not commit `node_modules` or `dist`.
 
 ## Verification
 
 The lockfile supports `npm ci`; an isolated clean install, typecheck, lint, build, and three full 39-test runs passed on 23 November 2026. See [verification](docs/verification.md) and [performance evidence](docs/performance.md). Checkout/order/idempotency state persists in browser localStorage for this demo; the checkout retry key is stored in sessionStorage until success.
 
-Partner reviews and the walkthrough remain pending. PR and remote CI status should be checked on GitHub.
+Partner reviews and the walkthrough remain pending. See the verification report for the exact scope and evidence gaps.

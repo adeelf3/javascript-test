@@ -37,7 +37,9 @@ export async function handleMockRequest(url:URL,method:string,headers:Headers,bo
   await wait(Math.min(Math.max(delay,0),3500));
   if(forced==='500') return error(500,'SERVER_ERROR','Temporary service interruption');
   if(url.pathname==='/api/products' && method==='GET') {
-    const f:ProductFilters={search:url.searchParams.get('search')??'',category:url.searchParams.get('category')??'',sort:url.searchParams.get('sort')??'',page:Math.max(1,Number(url.searchParams.get('page')??1)),inStock:url.searchParams.get('inStock')==='true'};
+    const requestedPage = Number(url.searchParams.get('page') ?? 1);
+    const page = Number.isSafeInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1;
+    const f:ProductFilters={search:url.searchParams.get('search')??'',category:url.searchParams.get('category')??'',sort:url.searchParams.get('sort')??'',page,inStock:url.searchParams.get('inStock')==='true'};
     const filtered=products.filter(p=>(!f.category||p.category===f.category)&&(!f.inStock||p.stock>0)&&p.name.toLowerCase().includes(f.search.toLowerCase()));
     if(f.sort==='price-asc')filtered.sort((a,b)=>a.price-b.price); if(f.sort==='price-desc')filtered.sort((a,b)=>b.price-a.price); if(f.sort==='rating')filtered.sort((a,b)=>b.rating-a.rating);
     return {status:200,body:{items:filtered.slice((f.page-1)*24,f.page*24),total:filtered.length}};
@@ -52,8 +54,24 @@ export async function handleMockRequest(url:URL,method:string,headers:Headers,bo
     if(!Array.isArray(b?.items)||!b.items.length)return error(400,'VALIDATION','Cart is empty',{items:'Add an item to your cart'});
     const key=headers.get('Idempotency-Key'); if(!key)return error(400,'VALIDATION','Missing idempotency key',{key:'A unique checkout key is required'});
     const existing=idempotency.get(key);if(existing)return {status:201,body:orders.get(existing)};
-    for(const item of b.items){const p=products.find(p=>p.id===item.productId);if(!p||!Number.isInteger(item.quantity)||item.quantity<1)return error(400,'VALIDATION','Invalid order item',{items:'Check the product and quantity'});if(p.stock<item.quantity||forced==='409')return error(409,'OUT_OF_STOCK',`${p.name} is out of stock`,{productId:p.id,productName:p.name});}
-    for(const item of b.items){const p=products.find(p=>p.id===item.productId);if(p)updateMockStock(p.id,p.stock-item.quantity);}
+    const requested = new Map<string, number>();
+    for (const item of b.items) {
+      if (!item || typeof item.productId !== 'string' || !Number.isSafeInteger(item.quantity) || item.quantity < 1) {
+        return error(400,'VALIDATION','Invalid order item',{items:'Check the product and quantity'});
+      }
+      requested.set(item.productId, (requested.get(item.productId) ?? 0) + item.quantity);
+    }
+    for (const [productId, quantity] of requested) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return error(400,'VALIDATION','Invalid order item',{items:'Check the product and quantity'});
+      if (product.stock < quantity || forced === '409') {
+        return error(409,'OUT_OF_STOCK',`${product.name} is out of stock`,{productId:product.id,productName:product.name});
+      }
+    }
+    for (const [productId, quantity] of requested) {
+      const product = products.find(p => p.id === productId)!;
+      updateMockStock(product.id, product.stock - quantity);
+    }
     const order:Order={id:`BB-${String(orders.size+1).padStart(5,'0')}`,status:'queued'};orders.set(order.id,order);idempotency.set(key,order.id);persistMockState();return {status:201,body:order};
   }
   const orderMatch=url.pathname.match(/^\/api\/orders\/([^/]+)$/);

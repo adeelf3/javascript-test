@@ -15,7 +15,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Provider store={store}>
       <QueryClientProvider client={client}>
-        <BrowserRouter><App /></BrowserRouter>
+        <BrowserRouter basename={import.meta.env.BASE_URL}><App /></BrowserRouter>
       </QueryClientProvider>
     </Provider>
   </React.StrictMode>,

@@ -7,6 +7,7 @@ import { store } from './store';
 import App from './App.tsx';
 import './style.css';
 import './theme.css';
+import './storefront.css';
 const client = new QueryClient({
   defaultOptions: { queries: { staleTime: 30_000, retry: 1, refetchOnWindowFocus: false } },
 });

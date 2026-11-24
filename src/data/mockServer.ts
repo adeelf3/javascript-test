@@ -39,9 +39,9 @@ export async function handleMockRequest(url:URL,method:string,headers:Headers,bo
   if(url.pathname==='/api/products' && method==='GET') {
     const requestedPage = Number(url.searchParams.get('page') ?? 1);
     const page = Number.isSafeInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1;
-    const f:ProductFilters={search:url.searchParams.get('search')??'',category:url.searchParams.get('category')??'',sort:url.searchParams.get('sort')??'',page,inStock:url.searchParams.get('inStock')==='true'};
-    const filtered=products.filter(p=>(!f.category||p.category===f.category)&&(!f.inStock||p.stock>0)&&p.name.toLowerCase().includes(f.search.toLowerCase()));
-    if(f.sort==='price-asc')filtered.sort((a,b)=>a.price-b.price); if(f.sort==='price-desc')filtered.sort((a,b)=>b.price-a.price); if(f.sort==='rating')filtered.sort((a,b)=>b.rating-a.rating);
+    const f:ProductFilters={search:url.searchParams.get('search')??'',category:url.searchParams.get('category')??'',sort:url.searchParams.get('sort')??'',page,inStock:url.searchParams.get('inStock')==='true',priceBand:url.searchParams.get('priceBand')??'',minRating:Number(url.searchParams.get('minRating')??0)};
+    const filtered=products.filter(p=>(!f.category||p.category===f.category)&&(!f.inStock||p.stock>0)&&p.name.toLowerCase().includes(f.search.toLowerCase())&&(!f.minRating||p.rating>=f.minRating)&&(!f.priceBand||(f.priceBand==='under-25'&&p.price<2500)||(f.priceBand==='25-75'&&p.price>=2500&&p.price<7500)||(f.priceBand==='75-plus'&&p.price>=7500)));
+    if(f.sort==='price-asc')filtered.sort((a,b)=>a.price-b.price); if(f.sort==='price-desc')filtered.sort((a,b)=>b.price-a.price); if(f.sort==='rating')filtered.sort((a,b)=>b.rating-a.rating); if(f.sort==='name')filtered.sort((a,b)=>a.name.localeCompare(b.name));
     return {status:200,body:{items:filtered.slice((f.page-1)*24,f.page*24),total:filtered.length}};
   }
   const productMatch=url.pathname.match(/^\/api\/products\/([^/]+)$/);

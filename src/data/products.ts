@@ -1,10 +1,10 @@
 import type { Category, Product } from '../types';
 import keyboardImage from '../assets/keyboard.webp';
-import duckImage from '../assets/duck.webp';
+import duckImage from '../assets/duck.svg';
 import coffeeImage from '../assets/coffee.webp';
 import stickersImage from '../assets/stickers.webp';
 import keyboardCard from '../assets/keyboard-card.webp';
-import duckCard from '../assets/duck-card.webp';
+import duckCard from '../assets/duck.svg';
 import coffeeCard from '../assets/coffee-card.webp';
 import stickersCard from '../assets/stickers-card.webp';
 const categories: Category[] = ['keyboards','ducks','coffee','stickers'];

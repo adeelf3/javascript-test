@@ -29,6 +29,14 @@ afterEach(cleanup);
 afterEach(() => vi.restoreAllMocks());
 
 describe('storefront acceptance flows', () => {
+  it('shows a themed mock API guide while keeping raw JSON links accessible', () => {
+    renderApp('/mock-api');
+    expect(screen.getByRole('heading', { name: /Mock API, made clear/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Explore endpoints/i })).toHaveAttribute('href', '#api-data-title');
+    expect(screen.getByText('/api/products.json').closest('a')).toHaveAttribute('href', '/api/products.json');
+    expect(screen.getByText('These paths describe the demo adapter used by the shop; they are not public HTTP endpoints.')).toBeInTheDocument();
+  });
+
   it('uses URL filters to show matching products', async () => {
     renderApp('/?search=Debug&category=ducks');
     expect(await screen.findAllByRole('link', { name: 'Debug Duck 2' })).toHaveLength(2);

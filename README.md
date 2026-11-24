@@ -39,7 +39,7 @@ Email: `demo@bugbazaar.dev`  Password: `demo123`
 
 No environment variables required: this project uses an in-process mock API, not a real payment processor or backend. The mock server is not production-grade authentication or persistence.
 
-The deployed site also publishes a read-only [mock products JSON](https://adeelf3.github.io/javascript-test/api/products.json) and [API index](https://adeelf3.github.io/javascript-test/api/index.json). These are shareable data links; interactive login and order requests still run in the browser mock adapter.
+The deployed [Mock API explorer](https://adeelf3.github.io/javascript-test/mock-api) presents the read-only [products JSON](https://adeelf3.github.io/javascript-test/api/products.json), [categories JSON](https://adeelf3.github.io/javascript-test/api/categories.json), and [API index](https://adeelf3.github.io/javascript-test/api/index.json). These are shareable data links; interactive login and order requests still run in the browser mock adapter.
 
 ## Mock error testing
 
@@ -61,6 +61,6 @@ The Week 1 repository and its original commit are present. The upgrade was pushe
 
 ## Verification
 
-The lockfile supports `npm ci`; typecheck, lint, build, and the current 45-test suite pass. Earlier three-run evidence is in [verification](docs/verification.md), with [performance evidence](docs/performance.md). Checkout/order/idempotency state persists in browser localStorage for this demo; the checkout retry key is stored in sessionStorage until success.
+The lockfile supports `npm ci`; typecheck, lint, build, and the current 46-test suite pass. Earlier three-run evidence is in [verification](docs/verification.md), with [performance evidence](docs/performance.md). Checkout/order/idempotency state persists in browser localStorage for this demo; the checkout retry key is stored in sessionStorage until success.
 
 Partner reviews and the walkthrough remain pending. See the verification report for the exact scope and evidence gaps.

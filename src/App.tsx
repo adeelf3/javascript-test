@@ -11,6 +11,7 @@ import { readMockStockUpdate } from './data/mockServer';
 import { startStockFeed } from './data/stockFeed';
 import ThemeToggle from './ThemeToggle';
 import Shop from './Shop';
+import ApiExplorer from './ApiExplorer';
 import { loginSchema, type LoginFields } from './validation';
 const money=(cents:number)=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(cents/100);
 function Status({message,onRetry}:{message:string;onRetry?:()=>void}){return <div className="status" role="status"><p>{message}</p>{onRetry&&<button onClick={onRetry} className="button">Try again</button>}</div>}
@@ -20,7 +21,7 @@ function Header() {
   const dispatch = useDispatch();
   return (
     <header className="header">
-      <div className="announcement"><div className="container">THE DESK EDIT <a href={`${import.meta.env.BASE_URL}api/products.json`} target="_blank" rel="noreferrer">View mock API ↗</a></div></div>
+      <div className="announcement"><div className="container">THE DESK EDIT <Link to="/mock-api">Explore mock API ↗</Link></div></div>
       <div className="container nav">
         <Link className="logo" to="/" aria-label="The Bug Bazaar home">
           <span className="logo-mark" aria-hidden="true">{'{ }'}</span>
@@ -44,7 +45,7 @@ function Footer() {
     <footer className="footer">
       <div className="container footer-inner">
         <div><strong className="footer-brand">THE BUG BAZAAR</strong><p>Better days begin at your desk.</p></div>
-        <div className="footer-links"><Link to="/">Shop all</Link><Link to="/cart">Your cart</Link><a href={`${import.meta.env.BASE_URL}api/products.json`} target="_blank" rel="noreferrer">Public mock API</a></div>
+        <div className="footer-links"><Link to="/">Shop all</Link><Link to="/cart">Your cart</Link><Link to="/mock-api">Mock API</Link></div>
         <small>© 2026 The Bug Bazaar · Demo storefront</small>
       </div>
     </footer>
@@ -225,4 +226,4 @@ function LiveStock() {
 
   return null;
 }
-export default function App(){const top=useBackToTop();return <ErrorBoundary><Header/><LiveStock/><Routes><Route path="/" element={<Shop/>}/><Route path="/products/:id" element={<Details/>}/><Route path="/cart" element={<Cart/>}/><Route path="/login" element={<Login/>}/><Route path="/account" element={<RequireAuth><Account/></RequireAuth>}/><Route path="/checkout" element={<RequireAuth><Checkout/></RequireAuth>}/><Route path="/orders/:id" element={<RequireAuth><Confirmation/></RequireAuth>}/><Route path="*" element={<NotFound/>}/></Routes><Footer/>{top&&<button className="to-top" onClick={()=>window.scrollTo({top:0,behavior:'smooth'})} aria-label="Back to top">↑</button>}</ErrorBoundary>}
+export default function App(){const top=useBackToTop();return <ErrorBoundary><Header/><LiveStock/><Routes><Route path="/" element={<Shop/>}/><Route path="/mock-api" element={<ApiExplorer/>}/><Route path="/products/:id" element={<Details/>}/><Route path="/cart" element={<Cart/>}/><Route path="/login" element={<Login/>}/><Route path="/account" element={<RequireAuth><Account/></RequireAuth>}/><Route path="/checkout" element={<RequireAuth><Checkout/></RequireAuth>}/><Route path="/orders/:id" element={<RequireAuth><Confirmation/></RequireAuth>}/><Route path="*" element={<NotFound/>}/></Routes><Footer/>{top&&<button className="to-top" onClick={()=>window.scrollTo({top:0,behavior:'smooth'})} aria-label="Back to top">↑</button>}</ErrorBoundary>}

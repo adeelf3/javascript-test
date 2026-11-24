@@ -4,7 +4,9 @@
   "version": "2.0.0",
   "type": "module",
   "scripts": {
+    "predev": "node scripts/generate-public-api.mjs",
     "dev": "vite",
+    "prebuild": "node scripts/generate-public-api.mjs",
     "build": "tsc -b && vite build",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",

@@ -6,4 +6,4 @@ export type OrderStatus = 'queued' | 'processing' | 'shipped';
 export type Order = { id: string; status: OrderStatus };
 export type CartItem = { product: Product; quantity: number };
 export type RequestState<T> = { status: 'idle' } | { status: 'loading' } | { status: 'success'; data: T } | { status: 'error'; message: string };
-export type ProductFilters = { search: string; category: string; sort: string; page: number; inStock: boolean };
+export type ProductFilters = { search: string; category: string; sort: string; page: number; inStock: boolean; priceBand?: string; minRating?: number };

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 650" role="img" aria-labelledby="title">
+  <title id="title">Yellow rubber duck on a warm studio background</title>
+  <defs>
+    <linearGradient id="background" x1="0" x2="1" y1="0" y2="1">
+      <stop stop-color="#f9e5c5"/>
+      <stop offset="1" stop-color="#e9d0a5"/>
+    </linearGradient>
+    <linearGradient id="body" x1="0" x2=".75" y1="0" y2="1">
+      <stop stop-color="#fff187"/>
+      <stop offset=".58" stop-color="#ffc73a"/>
+      <stop offset="1" stop-color="#eda120"/>
+    </linearGradient>
+    <linearGradient id="wing" x1="0" x2="1" y1="0" y2="1">
+      <stop stop-color="#ffdc54"/>
+      <stop offset="1" stop-color="#efa21f"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-30%" width="140%" height="170%">
+      <feGaussianBlur stdDeviation="24"/>
+    </filter>
+  </defs>
+  <rect width="900" height="650" fill="url(#background)"/>
+  <circle cx="770" cy="87" r="180" fill="#fff7df" opacity=".28"/>
+  <circle cx="95" cy="560" r="168" fill="#d6ad70" opacity=".12"/>
+  <ellipse cx="462" cy="545" rx="266" ry="37" fill="#875f2f" opacity=".24" filter="url(#shadow)"/>
+  <path d="M172 421c-9-40 19-83 70-94 34-7 67-1 96 11 12-23 39-38 77-42 81-9 161 15 217 65 53 47 93 102 84 145-9 43-75 73-214 77-149 4-260-17-311-64-17-16-26-39-19-98Z" fill="url(#body)" stroke="#d58f20" stroke-width="6"/>
+  <path d="M244 391c-32-24-50-60-43-93 22 25 55 38 98 35 18 12 29 31 30 48-25 22-56 26-85 10Z" fill="#ffd94e" stroke="#d9992f" stroke-width="5"/>
+  <circle cx="481" cy="271" r="142" fill="url(#body)" stroke="#d58f20" stroke-width="6"/>
+  <path d="M381 382c34 62 105 95 173 78-14 30-50 64-94 71-58 9-109-13-142-52 19-44 40-76 63-97Z" fill="url(#wing)" stroke="#d99322" stroke-width="5"/>
+  <path d="M607 289c58-3 104 12 129 33-24 19-66 31-125 30-12-18-14-42-4-63Z" fill="#ef8438" stroke="#bf5b28" stroke-width="6"/>
+  <path d="M609 318c48 2 90 3 126 4" fill="none" stroke="#c6662d" stroke-width="4"/>
+  <ellipse cx="541" cy="243" rx="13" ry="17" fill="#252622"/>
+  <circle cx="546" cy="237" r="4" fill="#fff"/>
+  <path d="M444 173c-23 8-42 24-53 46" fill="none" stroke="#fff8c2" stroke-width="15" stroke-linecap="round" opacity=".58"/>
+  <path d="M262 472c84 41 173 50 254 36" fill="none" stroke="#fff2a9" stroke-width="13" stroke-linecap="round" opacity=".43"/>
+</svg>

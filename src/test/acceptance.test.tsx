@@ -36,6 +36,14 @@ describe('storefront acceptance flows', () => {
     expect(screen.getByRole('searchbox', { name: 'Search products' })).toHaveValue('Debug');
   });
 
+  it('restores price, rating, and sorting controls from a shared URL', async () => {
+    renderApp('/?priceBand=under-25&minRating=4.5&sort=name');
+    expect(await screen.findByText(/products found/)).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: 'Price' })).toHaveValue('under-25');
+    expect(screen.getByRole('combobox', { name: 'Rating' })).toHaveValue('4.5');
+    expect(screen.getByRole('combobox', { name: 'Sort by' })).toHaveValue('name');
+  });
+
   it('falls back to page one for an invalid page parameter', async () => {
     renderApp('/?page=NaN');
     expect(await screen.findAllByRole('link', { name: 'Debug Duck 2' })).toHaveLength(2);

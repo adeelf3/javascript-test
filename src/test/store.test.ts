@@ -15,6 +15,8 @@ describe('The Bug Bazaar core behaviors',()=>{
  it('filters by search',async()=>{const r=await call('/api/products?search=Debug');expect((r.body as {items:typeof products}).items.every(p=>p.name.includes('Debug'))).toBe(true);});
  it('filters by stock',async()=>{const r=await call('/api/products?inStock=true');expect((r.body as {items:typeof products}).items.every(p=>p.stock>0)).toBe(true);});
  it('sorts prices ascending',async()=>{const r=await call('/api/products?sort=price-asc');const a=(r.body as {items:typeof products}).items;expect(a[0].price).toBeLessThanOrEqual(a[1].price);});
+ it('combines price and rating facets',async()=>{const r=await call('/api/products?priceBand=under-25&minRating=4.5');const a=(r.body as {items:typeof products}).items;expect(a.length).toBeGreaterThan(0);expect(a.every(p=>p.price<2500&&p.rating>=4.5)).toBe(true);});
+ it('sorts matching products by name',async()=>{const r=await call('/api/products?category=ducks&sort=name');const a=(r.body as {items:typeof products}).items;expect(a.map(p=>p.name)).toEqual([...a.map(p=>p.name)].sort((left,right)=>left.localeCompare(right)));});
  it('rejects missing login fields',async()=>expect((await call('/api/login','POST',{})).status).toBe(400));
  it('rejects incorrect password',async()=>expect((await call('/api/login','POST',{email:'demo@bugbazaar.dev',password:'bad'})).status).toBe(401));
  it('accepts valid login',async()=>expect((await call('/api/login','POST',{email:'demo@bugbazaar.dev',password:'demo123'})).status).toBe(200));
